@@ -1,0 +1,7 @@
+snova-lector-drive.json
+oauth_client.json
+token.pickle
+*.pickle
+*.json
+!biblioteca.json
+.env
