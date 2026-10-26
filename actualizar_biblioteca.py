@@ -21,6 +21,7 @@ resultado = subprocess.run(
 
 if resultado.returncode != 0:
     print(f"    {YELLOW}ERROR al generar biblioteca.json{RESET}")
+    input("\nAnota el tipo de error y pulsa ENTER para cerrar...")
     sys.exit(1)
 
 print("Generando index.html...")
@@ -30,6 +31,7 @@ resultado = subprocess.run(
 
 if resultado.returncode != 0:
     print(f"    {YELLOW}ERROR al generar index.html{RESET}")
+    input("\nAnota el tipo de error y pulsa ENTER para cerrar...")
     sys.exit(1)
 
 print("Publicando en GitHub...")
@@ -68,6 +70,7 @@ if push.returncode == 0:
     print(f"    {GREEN}Cambios publicados en GitHub.{RESET}")
 else:
     print(f"    {YELLOW} al publicar en GitHub.{RESET}")
+    input("\nAnota el tipo de error y pulsa ENTER para cerrar...")    
     sys.exit(1)
 
 print()

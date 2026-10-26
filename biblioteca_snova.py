@@ -292,17 +292,36 @@ index_html += f"""
 <h2>Historial cronológico</h2>
 """
 
-for fecha in sorted(
-    por_fecha.keys(),
-    key=lambda x: datetime.strptime(x, "%d/%m/%Y"),
-    reverse=True
-):
-    index_html += f'<div class="fecha">{fecha}</div><ul>'
+historial_js = [
+    {
+        "fecha": fecha,
+        "archivos": [
+            {
+                "nombre": a["nombre"],
+                "ruta": a["ruta"],
+                "letra": a["letra"]
+            }
+            for a in sorted(
+                por_fecha[fecha],
+                key=lambda x: x["nombre"]
+            )
+        ]
+    }
+    for fecha in sorted(
+        por_fecha.keys(),
+        key=lambda x: datetime.strptime(x, "%d/%m/%Y"),
+        reverse=True
+    )
+]
 
-    for a in sorted(por_fecha[fecha], key=lambda x: x["nombre"]):
-        index_html += f'<li><a href="{a["ruta"]}">{a["nombre"]}</a></li>'
+historial_js_json = json.dumps(
+    historial_js,
+    ensure_ascii=False
+)
 
-    index_html += "</ul>"
+index_html += """
+<div id="historial-cronologico"></div>
+"""
 
 index_html += """
 </div>
@@ -408,12 +427,110 @@ Seleccione una letra
 
 const biblioteca = """ + biblioteca_js + """;
 
+const historialCronologico = """ + historial_js_json + """;
+
 let letraActiva = null;
+
+
+let archivoSeleccionado = null;
+
+
+function crearFilaArchivo(item) {
+    const fila = document.createElement("div");
+
+    Object.assign(fila.style, {
+        display: "flex",
+        alignItems: "center",
+        gap: "20px",
+        flexWrap: "wrap"
+    });
+
+    const nombre = document.createElement("a");
+    nombre.href = "#";
+    nombre.textContent = item.nombre;
+
+    if (archivoSeleccionado?.ruta === item.ruta) {
+        nombre.style.color = "#d97706";
+        nombre.style.fontWeight = "bold";
+    }
+
+    nombre.addEventListener("click", event => {
+        event.preventDefault();
+
+        archivoSeleccionado =
+            archivoSeleccionado?.ruta === item.ruta ? null : item;
+        
+        mostrarHistorialCronologico();
+
+        if (letraActiva !== null) {
+            mostrarLetra(letraActiva);
+        }
+
+        actualizarResultadosBusqueda();
+    });
+
+    fila.appendChild(nombre);
+
+    if (archivoSeleccionado?.ruta === item.ruta) {
+        const descargar = document.createElement("a");
+        descargar.href = item.ruta;
+        descargar.textContent = "Descarga";
+        descargar.title = "Descargar archivo";
+
+        Object.assign(descargar.style, {
+            display: "inline-block",
+            marginLeft: "60px",
+            padding: "4px 10px",
+            background: "#245a81",
+            color: "#ffffff",
+            borderRadius: "5px",
+            textDecoration: "none",
+            fontSize: "0.9em",
+            fontWeight: "bold"
+        });
+
+        const verLink = document.createElement("button");
+        verLink.type = "button";
+        verLink.textContent = "Ruta Enlace";
+
+        verLink.addEventListener("click", () => {
+            abrirModalLink(item.ruta);
+        });
+
+        fila.appendChild(descargar);
+        fila.appendChild(verLink);
+    }
+
+    return fila;
+}
+
+function mostrarHistorialCronologico() {
+    const contenedor = document.getElementById("historial-cronologico");
+
+    contenedor.innerHTML = "";
+
+    historialCronologico.forEach(grupo => {
+        const fecha = document.createElement("div");
+        fecha.className = "fecha";
+        fecha.textContent = grupo.fecha;
+        contenedor.appendChild(fecha);
+
+        const ul = document.createElement("ul");
+
+        grupo.archivos.forEach(item => {
+            const li = document.createElement("li");
+            li.appendChild(crearFilaArchivo(item));
+            ul.appendChild(li);
+        });
+
+        contenedor.appendChild(ul);
+    });
+}
 
 function mostrarLetra(letra) {
     document.getElementById("contenido-letra")
         .scrollIntoView({ behavior: "smooth", block: "start" });
-    
+
     letraActiva = letra;
 
     const contenedor = document.getElementById("contenido-letra");
@@ -430,7 +547,11 @@ function mostrarLetra(letra) {
 
     const items = biblioteca
         .filter(item => item.letra === letra)
-        .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
+        .sort((a, b) =>
+            a.nombre.localeCompare(b.nombre, "es", {
+                sensitivity: "base"
+            })
+        );
 
     contenedor.innerHTML = "";
 
@@ -442,23 +563,123 @@ function mostrarLetra(letra) {
 
     items.forEach(item => {
         const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = item.ruta;
-        a.textContent = item.nombre;
-        li.appendChild(a);
+        li.appendChild(crearFilaArchivo(item));
         ul.appendChild(li);
     });
 
     contenedor.appendChild(ul);
 }
 
+
+
+function abrirModalLink(url) {
+    const anterior = document.getElementById("modal-link");
+
+    if (anterior) {
+        anterior.remove();
+    }
+
+    const fondo = document.createElement("div");
+    fondo.id = "modal-link";
+
+    Object.assign(fondo.style, {
+        position: "fixed",
+        inset: "0",
+        background: "rgba(0, 0, 0, 0.65)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: "99999"
+    });
+
+    const ventana = document.createElement("div");
+
+    Object.assign(ventana.style, {
+        background: "#ffffff",
+        color: "#222222",
+        padding: "20px",
+        borderRadius: "8px",
+        width: "min(90%, 500px)",
+        boxSizing: "border-box",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)"
+    });
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = "Enlace del archivo";
+
+    const campo = document.createElement("textarea");
+    campo.value = url;
+    campo.readOnly = true;
+
+    Object.assign(campo.style, {
+        width: "100%",
+        minHeight: "65px",
+        boxSizing: "border-box",
+        resize: "vertical",
+        marginBottom: "12px"
+    });
+
+    const botones = document.createElement("div");
+
+    Object.assign(botones.style, {
+        display: "flex",
+        justifyContent: "flex-end",
+        gap: "8px",
+        flexWrap: "wrap"
+    });
+
+    const copiar = document.createElement("button");
+    copiar.type = "button";
+    copiar.textContent = "Copiar";
+
+    const cerrar = document.createElement("button");
+    cerrar.type = "button";
+    cerrar.textContent = "Cerrar";
+
+    copiar.addEventListener("click", async () => {
+        try {
+            await navigator.clipboard.writeText(url);
+            copiar.textContent = "¡Copiado!";
+        } catch {
+            campo.focus();
+            campo.select();
+
+            try {
+                const correcto = document.execCommand("copy");
+                copiar.textContent = correcto
+                    ? "¡Copiado!"
+                    : "Copia manualmente";
+            } catch {
+                copiar.textContent = "Copia manualmente";
+            }
+        }
+    });
+
+    cerrar.addEventListener("click", () => {
+        fondo.remove();
+    });
+
+    botones.appendChild(copiar);
+    botones.appendChild(cerrar);
+
+    ventana.appendChild(titulo);
+    ventana.appendChild(campo);
+    ventana.appendChild(botones);
+    fondo.appendChild(ventana);
+
+    document.body.appendChild(fondo);
+
+    campo.focus();
+    campo.select();
+}
+
+
 const buscador = document.getElementById("buscador");
 const resultados = document.getElementById("resultados");
 const contador = document.getElementById("contador");
 
-buscador.addEventListener("input", function() {
-
-    const texto = this.value.toLowerCase().trim();
+function actualizarResultadosBusqueda() {
+    const texto = buscador.value.toLowerCase().trim();
 
     resultados.innerHTML = "";
 
@@ -474,11 +695,13 @@ buscador.addEventListener("input", function() {
     contador.textContent = coincidencias.length + " resultados";
 
     coincidencias.slice(0, 50).forEach(item => {
-        const div = document.createElement("div");
-        div.innerHTML = `<a href="${item.ruta}">${item.nombre}</a>`;
-        resultados.appendChild(div);
+        resultados.appendChild(crearFilaArchivo(item));
     });
-});
+}
+
+buscador.addEventListener("input", actualizarResultadosBusqueda);
+
+mostrarHistorialCronologico();
 
 </script>
 
