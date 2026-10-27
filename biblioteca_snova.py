@@ -543,7 +543,7 @@ function crearFilaArchivo(item) {
         background: coloresExtensiones[extension] || colorPorDefecto,
         color: "#ffffff",
         borderRadius: "4px",
-        fontSize: "0.85em",
+        fontSize: "0.80em",
         fontWeight: "bold",
         verticalAlign: "middle"
     });
