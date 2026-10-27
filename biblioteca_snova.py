@@ -106,14 +106,55 @@ a:hover {{
     overflow-y: auto;
 }}
 
+
+.cabecera {{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto 12px auto;
+}}
+
+.logo-cabecera {{
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}}
+
+.logo-izquierda {{
+    justify-self: end;
+}}
+
+.logo-derecha {{
+    justify-self: start;
+}}
+
 .title {{
     text-align: center;
     font-size: 32px;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin: 0;
     color: #9f7bff;
     letter-spacing: 1px;
+    white-space: nowrap;
 }}
+
+@media (max-width: 500px) {{
+    .cabecera {{
+        gap: 8px;
+    }}
+
+    .logo-cabecera {{
+        width: 55px;
+        height: 55px;
+    }}
+
+    .title {{
+        font-size: 24px;
+    }}
+}}
+
 
 .header-info {{
     display: flex;
@@ -253,7 +294,19 @@ a:hover {{
 </head>
 <body>
 
-<div class="title">Biblioteca de Traducciones</div>
+
+<div class="cabecera">
+    <img src="imagenes/logo_izquierda.png"
+         alt="Logo izquierdo"
+         class="logo-cabecera logo-izquierda">
+
+    <div class="title">Biblioteca</div>
+
+    <img src="imagenes/logo_derecha.png"
+         alt="Logo derecho"
+         class="logo-cabecera logo-derecha">
+</div>
+
 
 <div class="header-info">
   <div>Última actualización: {ultima_fecha}</div>
