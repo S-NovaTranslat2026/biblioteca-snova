@@ -531,8 +531,7 @@ function crearFilaArchivo(item) {
     nombre.href = "#";
     nombre.textContent = item.nombre;
     
-    const extension = item.ruta.split("?")[0].split("#")[0]
-        .split("/").pop().split(".").pop().toLowerCase();
+    const extension = (item.extension || "").toLowerCase();
     
     const etiqueta = document.createElement("span");
     etiqueta.textContent = extension.toUpperCase();

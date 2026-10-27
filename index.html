@@ -264,7 +264,7 @@ a:hover {
 
 
 <div class="header-info">
-  <div>Última actualización: 27/10/2026 14:14:42</div>
+  <div>Última actualización: 27/10/2026 14:19:59</div>
   <div>Total de la biblioteca: 44 archivos</div>
 </div>
 
@@ -584,8 +584,7 @@ function crearFilaArchivo(item) {
     nombre.href = "#";
     nombre.textContent = item.nombre;
     
-    const extension = item.ruta.split("?")[0].split("#")[0]
-        .split("/").pop().split(".").pop().toLowerCase();
+    const extension = (item.extension || "").toLowerCase();
     
     const etiqueta = document.createElement("span");
     etiqueta.textContent = extension.toUpperCase();
