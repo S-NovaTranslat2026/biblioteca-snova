@@ -495,6 +495,18 @@ const biblioteca = """ + biblioteca_js + """;
 
 const historialCronologico = """ + historial_js_json + """;
 
+const coloresExtensiones = {
+    "7z": "#47734d",
+    "zip": "#245a81",
+    "rar": "#e67e22",
+    "tar": "#8a5a2b",
+    "gz": "#607d8b",
+    "bz2": "#795548",
+    "xz": "#00897b"
+};
+
+const colorPorDefecto = "#555555";
+
 let letraActiva = null;
 
 
@@ -514,6 +526,24 @@ function crearFilaArchivo(item) {
     const nombre = document.createElement("a");
     nombre.href = "#";
     nombre.textContent = item.nombre;
+    
+    const extension = item.ruta.split("?")[0].split("#")[0]
+        .split("/").pop().split(".").pop().toLowerCase();
+    
+    const etiqueta = document.createElement("span");
+    etiqueta.textContent = extension.toUpperCase();
+    
+    Object.assign(etiqueta.style, {
+        display: "inline-block",
+        marginLeft: "8px",
+        padding: "2px 6px",
+        background: coloresExtensiones[extension] || colorPorDefecto,
+        color: "#ffffff",
+        borderRadius: "4px",
+        fontSize: "0.75em",
+        fontWeight: "bold",
+        verticalAlign: "middle"
+    });
 
     if (archivoSeleccionado?.ruta === item.ruta) {
         nombre.style.color = "#d97706";
@@ -536,6 +566,7 @@ function crearFilaArchivo(item) {
     });
 
     fila.appendChild(nombre);
+    fila.appendChild(etiqueta);
 
     if (archivoSeleccionado?.ruta === item.ruta) {
         const descargar = document.createElement("a");
