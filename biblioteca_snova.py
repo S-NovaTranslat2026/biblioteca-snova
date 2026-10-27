@@ -111,14 +111,14 @@ a:hover {{
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 20px;
+    gap: 50px;
     max-width: 1000px;
     margin: 0 auto 12px auto;
 }}
 
 .logo-cabecera {{
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     object-fit: contain;
 }}
 
@@ -131,11 +131,12 @@ a:hover {{
 }}
 
 .title {{
+    font-family: "Courier New", monospace;
     text-align: center;
-    font-size: 32px;
+    font-size: 60px;
     font-weight: 700;
     margin: 0;
-    color: #9f7bff;
+    color: #66FF00;
     letter-spacing: 1px;
     white-space: nowrap;
 }}
@@ -184,14 +185,26 @@ a:hover {{
     display: flex;
     gap: 10px;
     align-items: center;
+    padding-left: 30px;
 }}
 
 #buscador {{
     flex: 1;
-    max-width: 500px;
+    max-width: 520px;
+    height: 25px;
+    font-size: 16px;
+}}
+
+#contador {{
+    margin-left: 30px;
+}}
+
+#resultados {{
+    margin-left: 30px;
 }}
 
 .indice-titulo {{
+    color: #F5DE4D;
     text-align: center;
     margin-bottom: 10px;
 }}
@@ -286,7 +299,7 @@ a:hover {{
 .titulo-busqueda {{
     font-size: 24px;
     font-weight: bold;
-    color: #4caf50;
+    color: #FF6600;
 }}
 
 </style>
@@ -300,7 +313,7 @@ a:hover {{
          alt="Logo izquierdo"
          class="logo-cabecera logo-izquierda">
 
-    <div class="title">Biblioteca                   </div>
+    <div class="title">BIBLIOTECA</div>
 
     <img src="imagenes/logo_derecha.png"
          alt="Logo derecho"
@@ -342,7 +355,7 @@ index_html += f"""
 
 <div class="box scroll">
 
-<h2>Historial cronológico</h2>
+<h2 style="color: #FF00AA;">Historial cronológico</h2>
 """
 
 historial_js = [
@@ -401,7 +414,7 @@ index_html += """
 <h2 class="indice-titulo">
     Índice alfabético:
     <span style="font-size:14px; font-weight:normal;">
-        (Seleccione una letra)
+        (Selecciona un boton de letra)
     </span>
 </h2>
 
@@ -565,10 +578,12 @@ function mostrarHistorialCronologico() {
     historialCronologico.forEach(grupo => {
         const fecha = document.createElement("div");
         fecha.className = "fecha";
+        fecha.style.marginTop = "10px";
         fecha.textContent = grupo.fecha;
         contenedor.appendChild(fecha);
 
         const ul = document.createElement("ul");
+        ul.style.marginTop = "2px";
 
         grupo.archivos.forEach(item => {
             const li = document.createElement("li");
