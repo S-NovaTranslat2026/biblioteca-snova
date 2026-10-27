@@ -300,7 +300,7 @@ a:hover {{
          alt="Logo izquierdo"
          class="logo-cabecera logo-izquierda">
 
-    <div class="title">Biblioteca</div>
+    <div class="title">    Biblioteca    </div>
 
     <img src="imagenes/logo_derecha.png"
          alt="Logo derecho"
