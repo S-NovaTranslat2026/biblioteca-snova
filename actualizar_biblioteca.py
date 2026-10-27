@@ -54,6 +54,8 @@ mensaje = f"Actualización automática {fecha}"
 # git commit
 # Añadir SOLO cambios reales (no todo)
 subprocess.run(["git", "add", "-u"])
+# Añadir las imagenes de logos por si han cambiado.
+subprocess.run(["git", "add", "imagenes/"])
 
 fecha = datetime.now().strftime("%Y-%m-%d %H:%M")
 mensaje = f"Actualización automática {fecha}"
