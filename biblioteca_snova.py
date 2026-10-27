@@ -568,8 +568,9 @@ function crearFilaArchivo(item) {
         actualizarResultadosBusqueda();
     });
 
-    fila.appendChild(nombre);
+    
     fila.appendChild(etiqueta);
+    fila.appendChild(nombre);
 
     if (archivoSeleccionado?.ruta === item.ruta) {
         const descargar = document.createElement("a");

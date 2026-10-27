@@ -264,7 +264,7 @@ a:hover {
 
 
 <div class="header-info">
-  <div>Última actualización: 27/10/2026 14:19:59</div>
+  <div>Última actualización: 27/10/2026 14:26:05</div>
   <div>Total de la biblioteca: 44 archivos</div>
 </div>
 
@@ -621,8 +621,9 @@ function crearFilaArchivo(item) {
         actualizarResultadosBusqueda();
     });
 
-    fila.appendChild(nombre);
+    
     fila.appendChild(etiqueta);
+    fila.appendChild(nombre);
 
     if (archivoSeleccionado?.ruta === item.ruta) {
         const descargar = document.createElement("a");
