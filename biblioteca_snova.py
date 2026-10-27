@@ -22,6 +22,7 @@ for letra, lista_archivos in datos.items():
     for item in lista_archivos:
 
         nombre_sin_extension = Path(item["nombre"]).stem
+        extension = Path(item["nombre"]).suffix.lower().lstrip(".")
 
         fecha_dt = datetime.fromisoformat(
             item["fecha_mod"].replace("Z", "+00:00")
@@ -29,6 +30,7 @@ for letra, lista_archivos in datos.items():
 
         archivos.append({
             "nombre": nombre_sin_extension,
+            "extension": extension,
             "fecha_dt": fecha_dt,
             "fecha": fecha_dt.strftime("%d/%m/%Y"),
             "letra": letra,
@@ -338,6 +340,7 @@ index_html = header()
 biblioteca = [
     {
         "nombre": a["nombre"],
+        "extension": a["extension"],
         "ruta": a["ruta"],
         "letra": a["letra"]
     }
@@ -364,6 +367,7 @@ historial_js = [
         "archivos": [
             {
                 "nombre": a["nombre"],
+                "extension": a["extension"],
                 "ruta": a["ruta"],
                 "letra": a["letra"]
             }
